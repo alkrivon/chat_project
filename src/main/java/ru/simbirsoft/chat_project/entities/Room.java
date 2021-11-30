@@ -32,13 +32,9 @@ public class Room {
     public Room() {
     }
 
-    public Room(String name, boolean private_status,
-                User owner, Set<User> users, Set<Message> messages) {
+    public Room(String name, boolean private_status) {
         this.name = name;
         this.private_status = private_status;
-        this.owner = owner;
-        this.users = users;
-        this.messages = messages;
     }
 
     public Long getId() {

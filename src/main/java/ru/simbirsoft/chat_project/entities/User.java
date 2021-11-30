@@ -56,8 +56,7 @@ public class User {
 
     public User(String name, String login, String password,
                 String role, boolean ban_status, LocalDateTime ban_start,
-                LocalTime ban_time, Set<Room> owner_rooms, Set<Room> rooms,
-                Set<Message> messages) {
+                LocalTime ban_time) {
         this.name = name;
         this.login = login;
         this.password = password;
@@ -65,9 +64,6 @@ public class User {
         this.ban_status = ban_status;
         this.ban_start = ban_start;
         this.ban_time = ban_time;
-        this.owner_rooms = owner_rooms;
-        this.rooms = rooms;
-        this.messages = messages;
     }
 
     public User() {

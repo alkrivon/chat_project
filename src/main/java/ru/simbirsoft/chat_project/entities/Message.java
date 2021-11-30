@@ -11,6 +11,9 @@ public class Message {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "content")
+    private String content;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
@@ -20,15 +23,10 @@ public class Message {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Column(name = "content")
-    private String content;
-
     public Message() {
     }
 
-    public Message(User author, Room room, String content) {
-        this.author = author;
-        this.room = room;
+    public Message(String content) {
         this.content = content;
     }
 
