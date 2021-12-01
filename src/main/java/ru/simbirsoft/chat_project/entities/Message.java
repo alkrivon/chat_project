@@ -26,8 +26,10 @@ public class Message {
     public Message() {
     }
 
-    public Message(String content) {
+    public Message(String content, User author, Room room) {
         this.content = content;
+        this.author = author;
+        this.room = room;
     }
 
     public Long getId() {

@@ -1,5 +1,7 @@
 package ru.simbirsoft.chat_project.dto;
 
+import ru.simbirsoft.chat_project.entities.enums.Role;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -8,13 +10,13 @@ public class UserDtoRequest {
     private String name;
     private String login;
     private String password;
-    private String role;
+    private Role role;
     private boolean ban_status;
     private LocalDateTime ban_start;
     private LocalTime ban_time;
 
     public UserDtoRequest(String name, String login, String password,
-                          String role, boolean ban_status,
+                          Role role, boolean ban_status,
                           LocalDateTime ban_start, LocalTime ban_time) {
         this.name = name;
         this.login = login;
@@ -49,11 +51,11 @@ public class UserDtoRequest {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

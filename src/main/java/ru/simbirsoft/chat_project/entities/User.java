@@ -1,5 +1,7 @@
 package ru.simbirsoft.chat_project.entities;
 
+import ru.simbirsoft.chat_project.entities.enums.Role;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -29,7 +31,8 @@ public class User {
     private String password;
 
     @Column(name = "role")
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(name = "ban_status")
     private boolean ban_status;
@@ -55,7 +58,7 @@ public class User {
     private Set<Message> messages = new HashSet<>();
 
     public User(String name, String login, String password,
-                String role, boolean ban_status, LocalDateTime ban_start,
+                Role role, boolean ban_status, LocalDateTime ban_start,
                 LocalTime ban_time) {
         this.name = name;
         this.login = login;
@@ -102,11 +105,11 @@ public class User {
         this.password = password;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 

@@ -32,9 +32,10 @@ public class Room {
     public Room() {
     }
 
-    public Room(String name, boolean private_status) {
+    public Room(String name, boolean private_status, User owner) {
         this.name = name;
         this.private_status = private_status;
+        this.owner = owner;
     }
 
     public Long getId() {
