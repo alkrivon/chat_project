@@ -43,12 +43,12 @@ public class User {
     @Column(name = "ban_time")
     private LocalTime ban_time;
 
-    @OneToMany(mappedBy = "owner_id", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Room> owner_rooms = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
-            name = "user room",
+            name = "user_room",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "room_id")}
     )

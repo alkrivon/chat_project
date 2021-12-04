@@ -15,12 +15,11 @@ public class Message {
     private String content;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "author")
     private User author;
 
-    @Column(name = "room")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "room_id")
+    @JoinColumn(name = "room")
     private Room room;
 
     public Message() {
