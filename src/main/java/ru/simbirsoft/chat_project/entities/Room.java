@@ -18,7 +18,6 @@ public class Room {
     @Column(name = "private_status")
     private boolean private_status;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     private User owner;
 
