@@ -10,19 +10,17 @@ public class UserDtoResponse {
     private Long id;
     private String name;
     private String login;
-    private String password;
     private Role role;
     private boolean ban_status;
     private LocalDateTime ban_start;
     private LocalTime ban_time;
 
-    public UserDtoResponse(Long id, String name, String login, String password,
+    public UserDtoResponse(Long id, String name, String login,
                            Role role, boolean ban_status,
                            LocalDateTime ban_start, LocalTime ban_time) {
         this.id = id;
         this.name = name;
         this.login = login;
-        this.password = password;
         this.role = role;
         this.ban_status = ban_status;
         this.ban_start = ban_start;
@@ -51,14 +49,6 @@ public class UserDtoResponse {
 
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Role getRole() {
