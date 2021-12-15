@@ -18,14 +18,14 @@ public class Room {
     @Column(name = "private_status")
     private boolean private_status;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     private User owner;
 
     @ManyToMany(mappedBy = "rooms")
-    private Set<User> users = new HashSet<>();
+    private Set<User> users;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Message> messages = new HashSet<>();
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private Set<Message> messages;
 
     public Room() {
     }

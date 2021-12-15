@@ -19,7 +19,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     List<Message> findByRoomId(Long Id);
 
-    Optional<Message> findById(Long Id);
+    Optional<Message> findMessageById(Long Id);
 
 
 }

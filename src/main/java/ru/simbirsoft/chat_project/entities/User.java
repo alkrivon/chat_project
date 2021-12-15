@@ -3,7 +3,6 @@ package ru.simbirsoft.chat_project.entities;
 import ru.simbirsoft.chat_project.entities.enums.Role;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashSet;
@@ -19,15 +18,12 @@ public class User {
     private Long id;
 
     @Column(name = "name")
-    @NotBlank(message = "Please, enter a name!")
     private String name;
 
     @Column(name = "login")
-    @NotBlank(message = "Please, enter a login!")
     private String login;
 
     @Column(name = "password")
-    @NotBlank(message = "Please, enter a password!")
     private String password;
 
     @Column(name = "role")
@@ -43,8 +39,8 @@ public class User {
     @Column(name = "ban_time")
     private LocalTime ban_time;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Room> owner_rooms = new HashSet<>();
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private Set<Room> owner_rooms;
 
     @ManyToMany
     @JoinTable(
@@ -52,10 +48,10 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "room_id")}
     )
-    private Set<Room> rooms = new HashSet<>();
+    private Set<Room> rooms;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Message> messages = new HashSet<>();
+    @OneToMany(mappedBy = "author")
+    private Set<Message> messages;
 
     public User(String name, String login, String password,
                 Role role, boolean ban_status, LocalDateTime ban_start,

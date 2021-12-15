@@ -13,7 +13,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
     List<Room> findByOwnerName(String name);
 
-    Optional<Room> findById(Long Id);
+    Optional<Room> findRoomById(Long Id);
 
     List<Room> findByOwnerId(Long Id);
 }

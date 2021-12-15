@@ -3,12 +3,15 @@ package ru.simbirsoft.chat_project.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.factory.Mappers;
 import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
 import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
 import ru.simbirsoft.chat_project.entities.Room;
 
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
+
+    RoomMapper INSTANCE = Mappers.getMapper(RoomMapper.class);
 
     @Mappings({
             @Mapping(target = "id", source = "id"),

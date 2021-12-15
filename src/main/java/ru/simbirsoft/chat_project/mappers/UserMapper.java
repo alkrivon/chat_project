@@ -3,12 +3,15 @@ package ru.simbirsoft.chat_project.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.factory.Mappers;
 import ru.simbirsoft.chat_project.dto.UserDtoRequest;
 import ru.simbirsoft.chat_project.dto.UserDtoResponse;
 import ru.simbirsoft.chat_project.entities.User;
 
-@Mapper(componentModel = "sping")
+@Mapper
 public interface UserMapper {
+
+    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     @Mappings({
             @Mapping(source = "id", target = "id"),

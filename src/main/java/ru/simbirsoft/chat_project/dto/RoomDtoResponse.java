@@ -40,8 +40,8 @@ public class RoomDtoResponse {
         this.private_status = private_status;
     }
 
-    public User getOwner() {
-        return owner;
+    public String getOwner() {
+        return owner.getName();
     }
 
     public void setOwner(User owner) {

@@ -14,11 +14,11 @@ public class Message {
     @Column(name = "content")
     private String content;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "author")
     private User author;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "room")
     private Room room;
 

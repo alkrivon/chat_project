@@ -33,16 +33,16 @@ public class MessageDtoResponse {
         this.content = content;
     }
 
-    public User getAuthor() {
-        return author;
+    public String getNameAuthor() {
+        return author.getName();
     }
 
     public void setAuthor(User author) {
         this.author = author;
     }
 
-    public Room getRoom() {
-        return room;
+    public String getNameRoom() {
+        return room.getName();
     }
 
     public void setRoom(Room room) {
