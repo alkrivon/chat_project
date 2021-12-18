@@ -5,14 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.simbirsoft.chat_project.dto.MessageDtoRequest;
 import ru.simbirsoft.chat_project.dto.MessageDtoResponse;
-import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
 import ru.simbirsoft.chat_project.entities.Message;
 import ru.simbirsoft.chat_project.entities.Room;
 import ru.simbirsoft.chat_project.entities.User;
 import ru.simbirsoft.chat_project.exception.MessageNotFoundException;
 import ru.simbirsoft.chat_project.exception.RoomNotFoundException;
 import ru.simbirsoft.chat_project.mappers.MessageMapper;
-import ru.simbirsoft.chat_project.mappers.RoomMapper;
 import ru.simbirsoft.chat_project.repository.MessageRepository;
 import ru.simbirsoft.chat_project.repository.RoomRepository;
 import ru.simbirsoft.chat_project.repository.UserRepository;
@@ -61,7 +59,7 @@ public class MessageService {
                     .map(MessageMapper.INSTANCE::messageToMessageDto)
                     .collect(Collectors.toList());
         }
-        throw new RoomNotFoundException("There is no user with name = " + name);
+        throw new RoomNotFoundException("There is no room with name = " + name);
     }
 
     @Transactional
