@@ -14,17 +14,17 @@ public interface MessageMapper {
     MessageMapper INSTANCE = Mappers.getMapper(MessageMapper.class);
 
     @Mappings({
-            @Mapping(source = "id", target = "id"),
-            @Mapping(source = "content", target = "content"),
-            @Mapping(source = "author", target = "author"),
-            @Mapping(source = "room", target = "room")
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "content", source = "content"),
+            @Mapping(target = "author", source = "author.name"),
+            @Mapping(target = "room", source = "room.name")
     })
     MessageDtoResponse messageToMessageDto(Message entity);
 
     @Mappings({
-            @Mapping(source = "content", target = "content"),
-            @Mapping(source = "author", target = "author"),
-            @Mapping(source = "room", target = "room")
+            @Mapping(target = "content", source = "content"),
+            @Mapping(target = "author.id", source = "author"),
+            @Mapping(target = "room.id", source = "room")
     })
     Message messageDtoToMessage(MessageDtoRequest dto);
 }

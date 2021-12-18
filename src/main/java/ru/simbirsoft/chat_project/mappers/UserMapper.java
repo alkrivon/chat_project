@@ -6,7 +6,10 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import ru.simbirsoft.chat_project.dto.UserDtoRequest;
 import ru.simbirsoft.chat_project.dto.UserDtoResponse;
+import ru.simbirsoft.chat_project.entities.Room;
 import ru.simbirsoft.chat_project.entities.User;
+
+import java.util.Set;
 
 @Mapper
 public interface UserMapper {

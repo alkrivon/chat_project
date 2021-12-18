@@ -12,10 +12,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByRole(Role role);
 
-    Optional<User> findByName(String name);
+    Optional<User> findUserByName(String name);
 
     Optional<User> findUserById(Long id);
 
     //Метод для поиска списка пользователей в комнате. Не совсем понимаю, как его сделать:
-    //List<User> findAllByRooms(Set<Room> rooms);
+    //List<User> findAllByRooms(List<Room> rooms);
 }

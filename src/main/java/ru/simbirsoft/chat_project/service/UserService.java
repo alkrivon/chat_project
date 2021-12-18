@@ -25,6 +25,14 @@ public class UserService {
        }
        throw new UserNotFoundException("There is no user with id = " + id);
     }
+    @Transactional(readOnly = true)
+    public UserDtoResponse getUserByName(String name) {
+        Optional<User> user = userRepository.findUserByName(name);
+        if (user.isPresent()) {
+            return UserMapper.INSTANCE.userToUserDto(user.get());
+        }
+        throw new UserNotFoundException("There is no user with name = " + name);
+    }
     @Transactional
     public UserDtoResponse saveUser(UserDtoRequest userDtoRequest) {
         User user = userRepository.save(UserMapper.INSTANCE.userDtoToUser(userDtoRequest));

@@ -18,9 +18,13 @@ public class UserController {
         return userService.saveUser(userDtoRequest);
     }
 
-    @GetMapping("/get/{userId}")
+    @GetMapping("/get/byId/{userId}")
     public UserDtoResponse getUser(@PathVariable Long userId) {
         return userService.getUserById(userId);
+    }
+   @GetMapping("/get/byName/{userName}")
+    public UserDtoResponse getUserByName(@PathVariable String userName) {
+        return userService.getUserByName(userName);
     }
 
     @PutMapping("/update/{userId}")

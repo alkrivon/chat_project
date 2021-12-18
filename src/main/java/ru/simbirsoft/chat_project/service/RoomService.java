@@ -6,16 +6,24 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
 import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
 import ru.simbirsoft.chat_project.entities.Room;
+import ru.simbirsoft.chat_project.entities.User;
 import ru.simbirsoft.chat_project.exception.RoomNotFoundException;
 import ru.simbirsoft.chat_project.mappers.RoomMapper;
 import ru.simbirsoft.chat_project.repository.RoomRepository;
+import ru.simbirsoft.chat_project.repository.UserRepository;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public RoomDtoResponse getRoomById(Long id) {
@@ -24,6 +32,25 @@ public class RoomService {
             return RoomMapper.INSTANCE.roomToRoomDto(room.get());
         }
         throw new RoomNotFoundException("There is no room with id = " + id);
+    }
+    @Transactional(readOnly = true)
+    public RoomDtoResponse getRoomByName(String name) {
+        Optional<Room> room = roomRepository.findRoomByName(name);
+        if (room.isPresent()) {
+            return RoomMapper.INSTANCE.roomToRoomDto(room.get());
+        }
+        throw new RoomNotFoundException("There is no room with name = " + name);
+    }
+    @Transactional(readOnly = true)
+    public List<RoomDtoResponse> getRoomByOwner(String name) {
+        Optional<User> user = userRepository.findUserByName(name);
+        if (user.isPresent()) {
+        return roomRepository.findRoomByOwner(user.get())
+                .stream()
+                .map(RoomMapper.INSTANCE::roomToRoomDto)
+                .collect(Collectors.toList());
+        }
+        throw new RoomNotFoundException("There is no user with name = " + name);
     }
     @Transactional
     public RoomDtoResponse saveRoom(RoomDtoRequest roomDtoRequest) {

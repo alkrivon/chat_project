@@ -8,6 +8,7 @@ import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
 import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
 import ru.simbirsoft.chat_project.entities.Room;
 
+
 @Mapper(componentModel = "spring")
 public interface RoomMapper {
 
@@ -17,14 +18,14 @@ public interface RoomMapper {
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "private_status", source = "private_status"),
-            @Mapping(target = "owner", source = "owner")
+            @Mapping(target = "owner", source = "owner.name"),
     })
     RoomDtoResponse roomToRoomDto(Room entity);
 
     @Mappings({
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "private_status", source = "private_status"),
-            @Mapping(target = "owner", source = "owner")
+            @Mapping(target = "owner.id", source = "owner")
     })
     Room roomDtoToRoom(RoomDtoRequest dto);
 }

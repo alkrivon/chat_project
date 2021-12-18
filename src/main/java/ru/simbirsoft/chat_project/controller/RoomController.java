@@ -4,7 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
 import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
+import ru.simbirsoft.chat_project.dto.UserDtoResponse;
+import ru.simbirsoft.chat_project.mappers.RoomMapper;
 import ru.simbirsoft.chat_project.service.RoomService;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/room")
@@ -18,9 +24,19 @@ public class RoomController {
         return roomService.saveRoom(roomDtoRequest);
     }
 
-    @GetMapping("/get/{roomId}")
+    @GetMapping("/get/byId/{roomId}")
     public RoomDtoResponse getRoom(@PathVariable Long roomId) {
         return roomService.getRoomById(roomId);
+    }
+
+    @GetMapping("/get/byName/{roomName}")
+    public RoomDtoResponse getRoomByName(@PathVariable String roomName) {
+        return roomService.getRoomByName(roomName);
+    }
+
+    @GetMapping("/get/byOwner/{ownerName}")
+    public List<RoomDtoResponse> getRoomByOwner(@PathVariable String ownerName) {
+        return roomService.getRoomByOwner(ownerName);
     }
 
     @PutMapping("/update/{roomId}")
