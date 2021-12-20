@@ -23,7 +23,7 @@ public class Room {
     @ManyToOne
     private User owner;
 
-    @ManyToMany(mappedBy = "rooms")
+    @ManyToMany(mappedBy = "rooms", fetch = FetchType.LAZY)
     private List<User> users;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)

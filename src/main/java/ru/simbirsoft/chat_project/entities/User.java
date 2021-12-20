@@ -43,7 +43,7 @@ public class User {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<Room> owner_rooms;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_room",
             joinColumns = {@JoinColumn(name = "user_id")},

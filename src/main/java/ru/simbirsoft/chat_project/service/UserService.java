@@ -9,7 +9,10 @@ import ru.simbirsoft.chat_project.entities.User;
 import ru.simbirsoft.chat_project.exception.UserNotFoundException;
 import ru.simbirsoft.chat_project.mappers.UserMapper;
 import ru.simbirsoft.chat_project.repository.UserRepository;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -32,6 +35,13 @@ public class UserService {
             return UserMapper.INSTANCE.userToUserDto(user.get());
         }
         throw new UserNotFoundException("There is no user with name = " + name);
+    }
+    @Transactional(readOnly = true)
+    public List<UserDtoResponse> getAllUser() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserMapper.INSTANCE::userToUserDto)
+                .collect(Collectors.toList());
     }
     @Transactional
     public UserDtoResponse saveUser(UserDtoRequest userDtoRequest) {

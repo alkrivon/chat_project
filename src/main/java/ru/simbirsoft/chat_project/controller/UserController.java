@@ -6,6 +6,8 @@ import ru.simbirsoft.chat_project.dto.UserDtoRequest;
 import ru.simbirsoft.chat_project.dto.UserDtoResponse;
 import ru.simbirsoft.chat_project.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/user")
 public class UserController {
@@ -22,9 +24,15 @@ public class UserController {
     public UserDtoResponse getUser(@PathVariable Long userId) {
         return userService.getUserById(userId);
     }
-   @GetMapping("/get/byName/{userName}")
+
+    @GetMapping("/get/byName/{userName}")
     public UserDtoResponse getUserByName(@PathVariable String userName) {
         return userService.getUserByName(userName);
+    }
+
+    @GetMapping("/get/allUsers")
+    public List<UserDtoResponse> getAllUsers() {
+        return userService.getAllUser();
     }
 
     @PutMapping("/update/{userId}")
