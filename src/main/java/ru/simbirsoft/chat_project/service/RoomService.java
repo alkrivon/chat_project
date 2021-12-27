@@ -42,15 +42,15 @@ public class RoomService {
         throw new RoomNotFoundException("There is no room with name = " + name);
     }
     @Transactional(readOnly = true)
-    public List<RoomDtoResponse> getRoomByOwner(String name) {
-        Optional<User> user = userRepository.findUserByName(name);
+    public List<RoomDtoResponse> getRoomByOwner(String username) {
+        Optional<User> user = userRepository.findUserByUsername(username);
         if (user.isPresent()) {
         return roomRepository.findRoomByOwner(user.get())
                 .stream()
                 .map(RoomMapper.INSTANCE::roomToRoomDto)
                 .collect(Collectors.toList());
         }
-        throw new RoomNotFoundException("There is no user with name = " + name);
+        throw new RoomNotFoundException("There is no user with name = " + username);
     }
     @Transactional
     public RoomDtoResponse saveRoom(RoomDtoRequest roomDtoRequest) {

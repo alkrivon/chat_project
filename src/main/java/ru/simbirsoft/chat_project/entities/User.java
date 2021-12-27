@@ -1,11 +1,13 @@
 package ru.simbirsoft.chat_project.entities;
 
 import lombok.Data;
-import ru.simbirsoft.chat_project.entities.enums.Role;
+import org.springframework.data.annotation.LastModifiedDate;
+import ru.simbirsoft.chat_project.entities.enums.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -18,8 +20,8 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "login")
     private String login;
@@ -27,12 +29,19 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    @Enumerated(EnumType.STRING)
-    private Role role;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 
-    @Column(name = "ban_status")
-    private boolean ban_status;
+//    @Column(name = "role")
+//    @Enumerated(EnumType.STRING)
+//    private Role role;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Column(name = "ban_start")
     private LocalDateTime ban_start;
@@ -54,4 +63,7 @@ public class User {
     @OneToMany(mappedBy = "author")
     private List<Message> messages;
 
+    @LastModifiedDate
+    @Column(name = "updated")
+    private Date updated;
 }

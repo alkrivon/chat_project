@@ -39,15 +39,15 @@ public class MessageService {
     }
 
     @Transactional(readOnly = true)
-    public List<MessageDtoResponse> getMessageByAuthor(String name) {
-        Optional<User> user = userRepository.findUserByName(name);
+    public List<MessageDtoResponse> getMessageByAuthor(String username) {
+        Optional<User> user = userRepository.findUserByUsername(username);
         if (user.isPresent()) {
             return messageRepository.findByAuthor(user.get())
                     .stream()
                     .map(MessageMapper.INSTANCE::messageToMessageDto)
                     .collect(Collectors.toList());
         }
-        throw new RoomNotFoundException("There is no user with name = " + name);
+        throw new RoomNotFoundException("There is no user with name = " + username);
     }
 
     @Transactional(readOnly = true)

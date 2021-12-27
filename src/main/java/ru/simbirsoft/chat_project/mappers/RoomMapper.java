@@ -18,7 +18,7 @@ public interface RoomMapper {
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "private_status", source = "private_status"),
-            @Mapping(target = "owner", source = "owner.name"),
+            @Mapping(target = "owner", source = "owner.username"),
     })
     RoomDtoResponse roomToRoomDto(Room entity);
 

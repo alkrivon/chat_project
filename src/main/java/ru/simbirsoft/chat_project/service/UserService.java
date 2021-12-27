@@ -8,6 +8,7 @@ import ru.simbirsoft.chat_project.dto.UserDtoResponse;
 import ru.simbirsoft.chat_project.entities.User;
 import ru.simbirsoft.chat_project.exception.UserNotFoundException;
 import ru.simbirsoft.chat_project.mappers.UserMapper;
+import ru.simbirsoft.chat_project.repository.RoleRepository;
 import ru.simbirsoft.chat_project.repository.UserRepository;
 
 import java.util.List;
@@ -29,12 +30,12 @@ public class UserService {
        throw new UserNotFoundException("There is no user with id = " + id);
     }
     @Transactional(readOnly = true)
-    public UserDtoResponse getUserByName(String name) {
-        Optional<User> user = userRepository.findUserByName(name);
+    public UserDtoResponse getUserByUsername(String username) {
+        Optional<User> user = userRepository.findUserByUsername(username);
         if (user.isPresent()) {
             return UserMapper.INSTANCE.userToUserDto(user.get());
         }
-        throw new UserNotFoundException("There is no user with name = " + name);
+        throw new UserNotFoundException("There is no user with name = " + username);
     }
     @Transactional(readOnly = true)
     public List<UserDtoResponse> getAllUser() {

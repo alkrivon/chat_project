@@ -16,7 +16,7 @@ public interface MessageMapper {
     @Mappings({
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "content", source = "content"),
-            @Mapping(target = "author", source = "author.name"),
+            @Mapping(target = "author", source = "author.username"),
             @Mapping(target = "room", source = "room.name")
     })
     MessageDtoResponse messageToMessageDto(Message entity);

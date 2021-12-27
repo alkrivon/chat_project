@@ -18,22 +18,24 @@ public interface UserMapper {
 
     @Mappings({
             @Mapping(source = "id", target = "id"),
-            @Mapping(source = "name", target = "name"),
+            @Mapping(source = "username", target = "username"),
             @Mapping(source = "login", target = "login"),
-            @Mapping(source = "role", target = "role"),
-            @Mapping(source = "ban_status", target = "ban_status"),
+//            @Mapping(source = "role", target = "role"),
+            @Mapping(source = "status", target = "status"),
             @Mapping(source = "ban_start", target = "ban_start"),
             @Mapping(source = "ban_time", target = "ban_time"),
+            @Mapping(source = "updated", target = "updated"),
     })
     UserDtoResponse userToUserDto(User entity);
 
     @Mappings({
-            @Mapping(source = "name", target = "name"),
+            @Mapping(source = "username", target = "username"),
             @Mapping(source = "login", target = "login"),
-            @Mapping(source = "role", target = "role"),
-            @Mapping(source = "ban_status", target = "ban_status"),
+//            @Mapping(source = "role", target = "role"),
+            @Mapping(source = "status", target = "status"),
             @Mapping(source = "ban_start", target = "ban_start"),
             @Mapping(source = "ban_time", target = "ban_time"),
+            @Mapping(source = "updated", target = "updated"),
     })
     User userDtoToUser(UserDtoRequest dto);
 
