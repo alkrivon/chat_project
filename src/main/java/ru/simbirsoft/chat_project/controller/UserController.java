@@ -1,6 +1,8 @@
 package ru.simbirsoft.chat_project.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirsoft.chat_project.dto.UserDtoRequest;
 import ru.simbirsoft.chat_project.dto.UserDtoResponse;
@@ -9,30 +11,30 @@ import ru.simbirsoft.chat_project.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/user")
+@RequiredArgsConstructor
+@RequestMapping("/api/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping("/save")
-    public UserDtoResponse saveUser(@RequestBody UserDtoRequest userDtoRequest) {
-        return userService.saveUser(userDtoRequest);
-    }
-
-    @GetMapping("/get/byId/{userId}")
+    @GetMapping("/get/{userId}")
     public UserDtoResponse getUser(@PathVariable Long userId) {
         return userService.getUserById(userId);
     }
 
-    @GetMapping("/get/byUsername/{username}")
-    public UserDtoResponse getUserByName(@PathVariable String username) {
+    @GetMapping("/get")
+    public UserDtoResponse getUserByName(@RequestParam String username) {
         return userService.getUserByUsername(username);
     }
 
     @GetMapping("/get/allUsers")
     public List<UserDtoResponse> getAllUsers() {
         return userService.getAllUser();
+    }
+
+    @PostMapping("/save")
+    public UserDtoResponse saveUser(@RequestBody UserDtoRequest userDtoRequest) {
+        return userService.saveUser(userDtoRequest);
     }
 
     @PutMapping("/update/{userId}")
@@ -42,8 +44,8 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{userId}")
-    public String deleteUser(@PathVariable("userId") Long userId) {
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
-        return "User with id = " + userId + " has been deleted";
+        return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
     }
 }

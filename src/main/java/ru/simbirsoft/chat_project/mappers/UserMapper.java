@@ -6,10 +6,8 @@ import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 import ru.simbirsoft.chat_project.dto.UserDtoRequest;
 import ru.simbirsoft.chat_project.dto.UserDtoResponse;
-import ru.simbirsoft.chat_project.entities.Room;
 import ru.simbirsoft.chat_project.entities.User;
 
-import java.util.Set;
 
 @Mapper
 public interface UserMapper {
@@ -20,22 +18,20 @@ public interface UserMapper {
             @Mapping(source = "id", target = "id"),
             @Mapping(source = "username", target = "username"),
             @Mapping(source = "login", target = "login"),
-//            @Mapping(source = "role", target = "role"),
+            @Mapping(source = "role", target = "role"),
             @Mapping(source = "status", target = "status"),
             @Mapping(source = "ban_start", target = "ban_start"),
             @Mapping(source = "ban_time", target = "ban_time"),
-            @Mapping(source = "updated", target = "updated"),
     })
     UserDtoResponse userToUserDto(User entity);
 
     @Mappings({
             @Mapping(source = "username", target = "username"),
             @Mapping(source = "login", target = "login"),
-//            @Mapping(source = "role", target = "role"),
+            @Mapping(source = "role", target = "role"),
             @Mapping(source = "status", target = "status"),
             @Mapping(source = "ban_start", target = "ban_start"),
             @Mapping(source = "ban_time", target = "ban_time"),
-            @Mapping(source = "updated", target = "updated"),
     })
     User userDtoToUser(UserDtoRequest dto);
 

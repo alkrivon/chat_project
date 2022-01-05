@@ -1,5 +1,6 @@
 package ru.simbirsoft.chat_project.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,14 +21,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class MessageService {
 
-    @Autowired
-    MessageRepository messageRepository;
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    RoomRepository roomRepository;
+    private final MessageRepository messageRepository;
+    private final UserRepository userRepository;
+    private final RoomRepository roomRepository;
 
     @Transactional(readOnly = true)
     public MessageDtoResponse getMessageById(Long id) {
@@ -40,7 +39,7 @@ public class MessageService {
 
     @Transactional(readOnly = true)
     public List<MessageDtoResponse> getMessageByAuthor(String username) {
-        Optional<User> user = userRepository.findUserByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
             return messageRepository.findByAuthor(user.get())
                     .stream()

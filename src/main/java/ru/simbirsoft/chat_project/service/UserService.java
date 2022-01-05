@@ -1,10 +1,12 @@
 package ru.simbirsoft.chat_project.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.simbirsoft.chat_project.dto.UserDtoRequest;
 import ru.simbirsoft.chat_project.dto.UserDtoResponse;
+import ru.simbirsoft.chat_project.entities.Role;
 import ru.simbirsoft.chat_project.entities.User;
 import ru.simbirsoft.chat_project.exception.UserNotFoundException;
 import ru.simbirsoft.chat_project.mappers.UserMapper;
@@ -15,11 +17,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public UserDtoResponse getUserById(Long id) {
@@ -29,14 +33,16 @@ public class UserService {
        }
        throw new UserNotFoundException("There is no user with id = " + id);
     }
+
     @Transactional(readOnly = true)
     public UserDtoResponse getUserByUsername(String username) {
-        Optional<User> user = userRepository.findUserByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
             return UserMapper.INSTANCE.userToUserDto(user.get());
         }
         throw new UserNotFoundException("There is no user with name = " + username);
     }
+
     @Transactional(readOnly = true)
     public List<UserDtoResponse> getAllUser() {
         return userRepository.findAll()
@@ -44,11 +50,13 @@ public class UserService {
                 .map(UserMapper.INSTANCE::userToUserDto)
                 .collect(Collectors.toList());
     }
+
     @Transactional
     public UserDtoResponse saveUser(UserDtoRequest userDtoRequest) {
         User user = userRepository.save(UserMapper.INSTANCE.userDtoToUser(userDtoRequest));
         return UserMapper.INSTANCE.userToUserDto(user);
     }
+
     @Transactional
     public UserDtoResponse updateUser(Long id, UserDtoRequest userDtoRequest) {
         Optional<User> userOptional = userRepository.findUserById(id);
@@ -60,6 +68,7 @@ public class UserService {
         }
         throw new UserNotFoundException("There is no user with id = " + id);
     }
+
     @Transactional
     public void deleteUser(Long id) {
         Optional<User> userOptional = userRepository.findUserById(id);
@@ -68,5 +77,26 @@ public class UserService {
         } else {
             throw new UserNotFoundException("There is no user with id = " + id);
         }
+    }
+
+    public User saveUser(User user) {
+        Role role = roleRepository.findByName("ROLE_USER");
+        user.setRole(role);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
+    }
+
+    public User findByLogin(String login) {
+        return userRepository.findByLogin(login).get();
+    }
+
+    public User findByLoginAndPassword(String login, String password) {
+        User user = findByLogin(login);
+        if (user != null) {
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return user;
+            }
+        }
+        return null;
     }
 }

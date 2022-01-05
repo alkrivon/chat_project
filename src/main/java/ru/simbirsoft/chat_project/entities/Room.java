@@ -1,11 +1,17 @@
 package ru.simbirsoft.chat_project.entities;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Data
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "room")
 public class Room {

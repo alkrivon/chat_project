@@ -6,7 +6,6 @@ import ru.simbirsoft.chat_project.entities.enums.Status;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 
 @Data
 public class UserDtoResponse {
@@ -14,9 +13,8 @@ public class UserDtoResponse {
     private Long id;
     private String username;
     private String login;
-//    private Role role;
+    private Role role;
     private Status status;
     private LocalDateTime ban_start;
     private LocalTime ban_time;
-    private Date updated;
 }

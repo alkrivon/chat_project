@@ -1,5 +1,6 @@
 package ru.simbirsoft.chat_project.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +19,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class RoomService {
 
-    @Autowired
-    private RoomRepository roomRepository;
-    @Autowired
-    private UserRepository userRepository;
+    private final RoomRepository roomRepository;
+    private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
     public RoomDtoResponse getRoomById(Long id) {
@@ -33,6 +33,7 @@ public class RoomService {
         }
         throw new RoomNotFoundException("There is no room with id = " + id);
     }
+
     @Transactional(readOnly = true)
     public RoomDtoResponse getRoomByName(String name) {
         Optional<Room> room = roomRepository.findRoomByName(name);
@@ -41,9 +42,10 @@ public class RoomService {
         }
         throw new RoomNotFoundException("There is no room with name = " + name);
     }
+
     @Transactional(readOnly = true)
     public List<RoomDtoResponse> getRoomByOwner(String username) {
-        Optional<User> user = userRepository.findUserByUsername(username);
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
         return roomRepository.findRoomByOwner(user.get())
                 .stream()
@@ -52,11 +54,13 @@ public class RoomService {
         }
         throw new RoomNotFoundException("There is no user with name = " + username);
     }
+
     @Transactional
     public RoomDtoResponse saveRoom(RoomDtoRequest roomDtoRequest) {
         Room message = roomRepository.save(RoomMapper.INSTANCE.roomDtoToRoom(roomDtoRequest));
         return RoomMapper.INSTANCE.roomToRoomDto(message);
     }
+
     @Transactional
     public RoomDtoResponse updateRoom(Long id, RoomDtoRequest roomDtoRequest) {
         Optional<Room> roomOptional = roomRepository.findRoomById(id);

@@ -2,7 +2,6 @@ package ru.simbirsoft.chat_project.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.simbirsoft.chat_project.entities.Role;
 import ru.simbirsoft.chat_project.entities.User;
 
 import java.util.List;
@@ -15,11 +14,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 //    List<User> findAllByRole(Role role);
 
-    Optional<User> findUserByLogin(String login);
+    Optional<User> findByLogin(String login);
 
-    Optional<User> findUserByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     Optional<User> findUserById(Long id);
+
+
 
     //Метод для поиска списка пользователей в комнате. Не совсем понимаю, как его сделать:
     //List<User> findAllByRooms(List<Room> rooms);

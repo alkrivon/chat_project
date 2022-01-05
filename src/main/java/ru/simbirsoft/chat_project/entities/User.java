@@ -1,16 +1,20 @@
 package ru.simbirsoft.chat_project.entities;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.data.annotation.LastModifiedDate;
 import ru.simbirsoft.chat_project.entities.enums.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Entity
 @Table(name = "user")
 public class User {
@@ -29,15 +33,14 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles;
-
-//    @Column(name = "role")
-//    @Enumerated(EnumType.STRING)
-//    private Role role;
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(name = "user_roles",
+//            joinColumns = {@JoinColumn(name = "user_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+//    private List<Role> roles;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -63,7 +66,7 @@ public class User {
     @OneToMany(mappedBy = "author")
     private List<Message> messages;
 
-    @LastModifiedDate
-    @Column(name = "updated")
-    private Date updated;
+//    @LastModifiedDate
+//    @Column(name = "updated")
+//    private Date updated;
 }

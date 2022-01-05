@@ -1,6 +1,8 @@
 package ru.simbirsoft.chat_project.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
 import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
@@ -9,30 +11,30 @@ import ru.simbirsoft.chat_project.service.RoomService;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("api/room")
 public class RoomController {
 
-    @Autowired
-    RoomService roomService;
+    private final RoomService roomService;
 
-    @PostMapping("/save")
-    public RoomDtoResponse saveRoom(@RequestBody RoomDtoRequest roomDtoRequest) {
-        return roomService.saveRoom(roomDtoRequest);
-    }
-
-    @GetMapping("/get/byId/{roomId}")
+    @GetMapping("/get/{roomId}")
     public RoomDtoResponse getRoom(@PathVariable Long roomId) {
         return roomService.getRoomById(roomId);
     }
 
-    @GetMapping("/get/byName/{roomName}")
-    public RoomDtoResponse getRoomByName(@PathVariable String roomName) {
+    @GetMapping("/get/byName")
+    public RoomDtoResponse getRoomByName(@RequestParam String roomName) {
         return roomService.getRoomByName(roomName);
     }
 
-    @GetMapping("/get/byOwner/{ownerName}")
-    public List<RoomDtoResponse> getRoomByOwner(@PathVariable String ownerName) {
+    @GetMapping("/get/byOwner")
+    public List<RoomDtoResponse> getRoomByOwner(@RequestParam String ownerName) {
         return roomService.getRoomByOwner(ownerName);
+    }
+
+    @PostMapping("/save")
+    public RoomDtoResponse saveRoom(@RequestBody RoomDtoRequest roomDtoRequest) {
+        return roomService.saveRoom(roomDtoRequest);
     }
 
     @PutMapping("/update/{roomId}")
@@ -42,9 +44,9 @@ public class RoomController {
     }
 
     @DeleteMapping("/delete/{roomId}")
-    public String deleteRoom(@PathVariable("roomId") Long roomId) {
+    public ResponseEntity<String> deleteRoom(@PathVariable("roomId") Long roomId) {
         roomService.deleteRoom(roomId);
-        return "Room with id = " + roomId + " has been deleted";
+        return new ResponseEntity<>("Room has been deleted", HttpStatus.OK);
     }
 }
 

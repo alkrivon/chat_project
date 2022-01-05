@@ -1,10 +1,15 @@
 package ru.simbirsoft.chat_project.entities;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
 @Entity
 @Table(name = "message")
 public class Message {
