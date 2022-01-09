@@ -8,5 +8,5 @@ public class MessageDtoResponse {
     private Long id;
     private String content;
     private String author;
-    private String room;
+    private Long room;
 }

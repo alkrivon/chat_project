@@ -1,8 +1,6 @@
 package ru.simbirsoft.chat_project.entities;
 
 import lombok.*;
-import org.springframework.data.annotation.LastModifiedDate;
-import ru.simbirsoft.chat_project.entities.enums.Status;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,10 +9,8 @@ import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Entity
 @Table(name = "user")
 public class User {
@@ -33,18 +29,12 @@ public class User {
     @Column(name = "password")
     private String password;
 
-//    @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "user_roles",
-//            joinColumns = {@JoinColumn(name = "user_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "role_id")})
-//    private List<Role> roles;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "role_id")
     private Role role;
 
     @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    private Boolean status;
 
     @Column(name = "ban_start")
     private LocalDateTime ban_start;
@@ -63,10 +53,6 @@ public class User {
     )
     private List<Room> rooms;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Message> messages;
-
-//    @LastModifiedDate
-//    @Column(name = "updated")
-//    private Date updated;
 }

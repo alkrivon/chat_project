@@ -12,12 +12,14 @@ public class CustomUserDetails implements UserDetails {
 
     private String login;
     private String password;
+    private Boolean status;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
     public static CustomUserDetails fromUserEntityToCustomUserDetails(User user) {
         CustomUserDetails c = new CustomUserDetails();
         c.login = user.getLogin();
         c.password = user.getPassword();
+        c.status = user.getStatus();
         c.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName()));
         return c;
     }
@@ -44,8 +46,9 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return status.equals(true);
     }
+
 
     @Override
     public boolean isCredentialsNonExpired() {

@@ -10,8 +10,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Entity
 @Table(name = "room")
 public class Room {
@@ -26,7 +24,7 @@ public class Room {
     @Column(name = "private_status")
     private boolean private_status;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private User owner;
 
     @ManyToMany(mappedBy = "rooms", fetch = FetchType.LAZY)

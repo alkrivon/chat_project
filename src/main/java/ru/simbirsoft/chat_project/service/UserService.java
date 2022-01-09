@@ -52,7 +52,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDtoResponse saveUser(UserDtoRequest userDtoRequest) {
+    public UserDtoResponse createUser(UserDtoRequest userDtoRequest) {
         User user = userRepository.save(UserMapper.INSTANCE.userDtoToUser(userDtoRequest));
         return UserMapper.INSTANCE.userToUserDto(user);
     }
@@ -77,6 +77,11 @@ public class UserService {
         } else {
             throw new UserNotFoundException("There is no user with id = " + id);
         }
+    }
+
+    @Transactional
+    public void setStatus(Long id, Boolean status) {
+        userRepository.setStatus(id, status);
     }
 
     public User saveUser(User user) {

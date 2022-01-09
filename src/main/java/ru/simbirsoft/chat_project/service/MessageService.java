@@ -62,7 +62,7 @@ public class MessageService {
     }
 
     @Transactional
-    public MessageDtoResponse saveMessage(MessageDtoRequest messageDtoRequest) {
+    public MessageDtoResponse createMessage(MessageDtoRequest messageDtoRequest) {
         Message message = messageRepository.save(MessageMapper.INSTANCE.messageDtoToMessage(messageDtoRequest));
         return MessageMapper.INSTANCE.messageToMessageDto(message);
     }

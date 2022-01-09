@@ -18,7 +18,7 @@ public interface UserMapper {
             @Mapping(source = "id", target = "id"),
             @Mapping(source = "username", target = "username"),
             @Mapping(source = "login", target = "login"),
-            @Mapping(source = "role", target = "role"),
+            @Mapping(source = "role.id", target = "role"),
             @Mapping(source = "status", target = "status"),
             @Mapping(source = "ban_start", target = "ban_start"),
             @Mapping(source = "ban_time", target = "ban_time"),
@@ -28,7 +28,7 @@ public interface UserMapper {
     @Mappings({
             @Mapping(source = "username", target = "username"),
             @Mapping(source = "login", target = "login"),
-            @Mapping(source = "role", target = "role"),
+            @Mapping(source = "role", target = "role.id"),
             @Mapping(source = "status", target = "status"),
             @Mapping(source = "ban_start", target = "ban_start"),
             @Mapping(source = "ban_time", target = "ban_time"),

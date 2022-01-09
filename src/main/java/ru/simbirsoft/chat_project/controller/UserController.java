@@ -3,6 +3,7 @@ package ru.simbirsoft.chat_project.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirsoft.chat_project.dto.UserDtoRequest;
 import ru.simbirsoft.chat_project.dto.UserDtoResponse;
@@ -32,11 +33,12 @@ public class UserController {
         return userService.getAllUser();
     }
 
-    @PostMapping("/save")
+    @PostMapping("/create")
     public UserDtoResponse saveUser(@RequestBody UserDtoRequest userDtoRequest) {
-        return userService.saveUser(userDtoRequest);
+        return userService.createUser(userDtoRequest);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{userId}")
     public UserDtoResponse updateUser(@PathVariable Long userId,
                                       @RequestBody UserDtoRequest userDtoRequest) {
@@ -47,5 +49,13 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
         userService.deleteUser(userId);
         return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('MODERATOR')")
+    @PatchMapping("/setStatus/{userId}")
+    private ResponseEntity<String> setStatus(@PathVariable("userId") Long userId,
+                                             @RequestParam Boolean status) {
+        userService.setStatus(userId, status);
+        return new ResponseEntity<>("Status has been updated", HttpStatus.OK);
     }
 }

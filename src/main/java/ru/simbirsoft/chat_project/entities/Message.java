@@ -1,15 +1,12 @@
 package ru.simbirsoft.chat_project.entities;
 
 import lombok.*;
-
 import javax.persistence.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-@EqualsAndHashCode
 @Entity
 @Table(name = "message")
 public class Message {
@@ -22,7 +19,7 @@ public class Message {
     @Column(name = "content")
     private String content;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "author")
     private User author;
 

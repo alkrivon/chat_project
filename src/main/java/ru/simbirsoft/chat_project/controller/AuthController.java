@@ -1,5 +1,6 @@
 package ru.simbirsoft.chat_project.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,13 +14,12 @@ import ru.simbirsoft.chat_project.service.UserService;
 
 import javax.validation.Valid;
 
+@RequiredArgsConstructor
 @RestController
 public class AuthController {
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/register")
     public String registerUser(@RequestBody @Valid RegistrationRequest registrationRequest) {

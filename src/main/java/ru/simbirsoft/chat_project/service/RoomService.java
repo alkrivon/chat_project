@@ -1,7 +1,6 @@
 package ru.simbirsoft.chat_project.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
@@ -9,13 +8,13 @@ import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
 import ru.simbirsoft.chat_project.entities.Room;
 import ru.simbirsoft.chat_project.entities.User;
 import ru.simbirsoft.chat_project.exception.RoomNotFoundException;
+import ru.simbirsoft.chat_project.exception.UserNotFoundException;
 import ru.simbirsoft.chat_project.mappers.RoomMapper;
 import ru.simbirsoft.chat_project.repository.RoomRepository;
 import ru.simbirsoft.chat_project.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,7 +55,7 @@ public class RoomService {
     }
 
     @Transactional
-    public RoomDtoResponse saveRoom(RoomDtoRequest roomDtoRequest) {
+    public RoomDtoResponse createRoom(RoomDtoRequest roomDtoRequest) {
         Room message = roomRepository.save(RoomMapper.INSTANCE.roomDtoToRoom(roomDtoRequest));
         return RoomMapper.INSTANCE.roomToRoomDto(message);
     }
@@ -72,6 +71,34 @@ public class RoomService {
         }
         throw new RoomNotFoundException("There is no room with id = " + id);
     }
+    @Transactional
+    public void addUserToRoom(Long userId, Long roomId) {
+        Optional<User> user = userRepository.findUserById(userId);
+        Optional<Room> room = roomRepository.findRoomById(roomId);
+        if (user.isPresent() && room.isPresent()) {
+            user.get().getRooms().add(room.get());
+            userRepository.save(user.get());
+        } else if(!user.isPresent()) {
+            throw new UserNotFoundException("There is no user in with id = " + userId);
+        } else {
+            throw new RoomNotFoundException("There is no room with id = " + roomId);
+        }
+    }
+
+    @Transactional
+    public void deleteUserFromRoom(Long userId, Long roomId) {
+        Optional<User> user = userRepository.findUserById(userId);
+        Optional<Room> room = roomRepository.findRoomById(roomId);
+        if (user.isPresent() && room.isPresent()) {
+            user.get().getRooms().remove(room.get());
+            userRepository.save(user.get());
+        } else if(!user.isPresent()) {
+            throw new UserNotFoundException("There is no user in with id = " + userId);
+        } else {
+            throw new RoomNotFoundException("There is no room with id = " + roomId);
+        }
+    }
+
     @Transactional
     public void deleteRoom(Long id) {
         Optional<Room> roomOptional = roomRepository.findRoomById(id);

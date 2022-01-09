@@ -3,6 +3,7 @@ package ru.simbirsoft.chat_project.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirsoft.chat_project.dto.MessageDtoRequest;
 import ru.simbirsoft.chat_project.dto.MessageDtoResponse;
@@ -33,17 +34,20 @@ public class MessageController {
         return messageService.getMessageByRoom(roomName);
     }
 
-    @PostMapping("/save")
+    @PreAuthorize("principal.accountNonLocked")
+    @PostMapping("/create")
     public MessageDtoResponse saveMessage(@RequestBody MessageDtoRequest messageDtoRequest) {
-        return messageService.saveMessage(messageDtoRequest);
+        return messageService.createMessage(messageDtoRequest);
     }
 
+    @PreAuthorize("principal.accountNonLocked")
     @PutMapping("/update/{messageId}")
     public MessageDtoResponse updateMessage(@PathVariable Long messageId,
                                             @RequestBody MessageDtoRequest messageDtoRequest) {
         return messageService.updateMessage(messageId, messageDtoRequest);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
     @DeleteMapping("/delete/{messageId}")
     public ResponseEntity<String> deleteMessage(@PathVariable("messageId") Long messageId) {
         messageService.deleteMessage(messageId);

@@ -3,6 +3,7 @@ package ru.simbirsoft.chat_project.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
 import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
@@ -32,11 +33,33 @@ public class RoomController {
         return roomService.getRoomByOwner(ownerName);
     }
 
-    @PostMapping("/save")
-    public RoomDtoResponse saveRoom(@RequestBody RoomDtoRequest roomDtoRequest) {
-        return roomService.saveRoom(roomDtoRequest);
+    @PreAuthorize("principal.accountNonLocked")
+    @PostMapping("/addUserToRoom/{userId}")
+    public ResponseEntity<String> addUserToRoom(@PathVariable Long userId,
+                                                @RequestParam Long roomId) {
+        roomService.addUserToRoom(userId, roomId);
+        return new ResponseEntity<>("User has been added", HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN') OR principal.username == @roomRepository." +
+                                                    "findRoomById(#roomId)" +
+                                                     ".get().owner.login")
+    @PostMapping("/deleteUserFromRoom/{userId}")
+    public ResponseEntity<String> deleteUserFromRoom(@PathVariable Long userId,
+                                                     @RequestParam Long roomId) {
+        roomService.deleteUserFromRoom(userId, roomId);
+        return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
+    }
+
+    @PreAuthorize("principal.accountNonLocked")
+    @PostMapping("/create")
+    public RoomDtoResponse saveRoom(@RequestBody RoomDtoRequest roomDtoRequest) {
+        return roomService.createRoom(roomDtoRequest);
+    }
+
+    @PreAuthorize("hasRole('ADMIN') OR principal.username == @roomRepository." +
+            "findRoomById(#roomId)" +
+            ".get().owner.login")
     @PutMapping("/update/{roomId}")
     public RoomDtoResponse updateRoom(@PathVariable Long roomId,
                                       @RequestBody RoomDtoRequest roomDtoRequest) {
