@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirsoft.chat_project.dto.UserDtoRequest;
 import ru.simbirsoft.chat_project.dto.UserDtoResponse;
+import ru.simbirsoft.chat_project.exception.NotFoundException;
 import ru.simbirsoft.chat_project.service.UserService;
 
 import java.util.List;
@@ -19,12 +20,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/get/{userId}")
-    public UserDtoResponse getUser(@PathVariable Long userId) {
+    public UserDtoResponse getUser(@PathVariable Long userId) throws NotFoundException {
         return userService.getUserById(userId);
     }
 
     @GetMapping("/get")
-    public UserDtoResponse getUserByName(@RequestParam String username) {
+    public UserDtoResponse getUserByName(@RequestParam String username) throws NotFoundException {
         return userService.getUserByUsername(username);
     }
 
@@ -41,12 +42,12 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/update/{userId}")
     public UserDtoResponse updateUser(@PathVariable Long userId,
-                                      @RequestBody UserDtoRequest userDtoRequest) {
+                                      @RequestBody UserDtoRequest userDtoRequest) throws NotFoundException {
         return userService.updateUser(userId, userDtoRequest);
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) {
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long userId) throws NotFoundException {
         userService.deleteUser(userId);
         return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
     }

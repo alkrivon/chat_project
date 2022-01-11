@@ -1,11 +1,11 @@
 package ru.simbirsoft.chat_project.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.simbirsoft.chat_project.entities.User;
+import ru.simbirsoft.chat_project.exception.AuthException;
 import ru.simbirsoft.chat_project.security.AuthRequest;
 import ru.simbirsoft.chat_project.security.AuthResponse;
 import ru.simbirsoft.chat_project.security.RegistrationRequest;
@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    public AuthResponse auth(@RequestBody AuthRequest request) {
+    public AuthResponse auth(@RequestBody AuthRequest request) throws AuthException {
         User user = userService.findByLoginAndPassword(request.getLogin(),
                                                         request.getPassword());
         String token = jwtTokenProvider.generateToken(user.getLogin());

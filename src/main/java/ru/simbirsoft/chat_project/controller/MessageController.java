@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirsoft.chat_project.dto.MessageDtoRequest;
 import ru.simbirsoft.chat_project.dto.MessageDtoResponse;
+import ru.simbirsoft.chat_project.exception.NotFoundException;
 import ru.simbirsoft.chat_project.service.MessageService;
 
 import java.util.List;
@@ -20,17 +21,17 @@ public class MessageController {
 
 
     @GetMapping("/get/{messageId}")
-    public MessageDtoResponse getMessage(@PathVariable Long messageId) {
+    public MessageDtoResponse getMessage(@PathVariable Long messageId) throws NotFoundException {
         return messageService.getMessageById(messageId);
     }
 
     @GetMapping("/get/byAuthor")
-    public List<MessageDtoResponse> getMessageByAuthor(@RequestParam String authorName) {
+    public List<MessageDtoResponse> getMessageByAuthor(@RequestParam String authorName) throws NotFoundException {
         return messageService.getMessageByAuthor(authorName);
     }
 
     @GetMapping("/get/byRoomName")
-    public List<MessageDtoResponse> getMessageByRoom(@RequestParam String roomName) {
+    public List<MessageDtoResponse> getMessageByRoom(@RequestParam String roomName) throws NotFoundException {
         return messageService.getMessageByRoom(roomName);
     }
 
@@ -43,13 +44,13 @@ public class MessageController {
     @PreAuthorize("principal.accountNonLocked")
     @PutMapping("/update/{messageId}")
     public MessageDtoResponse updateMessage(@PathVariable Long messageId,
-                                            @RequestBody MessageDtoRequest messageDtoRequest) {
+                                            @RequestBody MessageDtoRequest messageDtoRequest) throws NotFoundException {
         return messageService.updateMessage(messageId, messageDtoRequest);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
     @DeleteMapping("/delete/{messageId}")
-    public ResponseEntity<String> deleteMessage(@PathVariable("messageId") Long messageId) {
+    public ResponseEntity<String> deleteMessage(@PathVariable("messageId") Long messageId) throws NotFoundException {
         messageService.deleteMessage(messageId);
         return new ResponseEntity<>("Message has been deleted", HttpStatus.OK);
     }

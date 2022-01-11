@@ -7,8 +7,7 @@ import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
 import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
 import ru.simbirsoft.chat_project.entities.Room;
 import ru.simbirsoft.chat_project.entities.User;
-import ru.simbirsoft.chat_project.exception.RoomNotFoundException;
-import ru.simbirsoft.chat_project.exception.UserNotFoundException;
+import ru.simbirsoft.chat_project.exception.NotFoundException;
 import ru.simbirsoft.chat_project.mappers.RoomMapper;
 import ru.simbirsoft.chat_project.repository.RoomRepository;
 import ru.simbirsoft.chat_project.repository.UserRepository;
@@ -25,25 +24,25 @@ public class RoomService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public RoomDtoResponse getRoomById(Long id) {
+    public RoomDtoResponse getRoomById(Long id) throws NotFoundException {
         Optional<Room> room = roomRepository.findRoomById(id);
         if (room.isPresent()) {
             return RoomMapper.INSTANCE.roomToRoomDto(room.get());
         }
-        throw new RoomNotFoundException("There is no room with id = " + id);
+        throw new NotFoundException("There is no room with id = " + id);
     }
 
     @Transactional(readOnly = true)
-    public RoomDtoResponse getRoomByName(String name) {
+    public RoomDtoResponse getRoomByName(String name) throws NotFoundException {
         Optional<Room> room = roomRepository.findRoomByName(name);
         if (room.isPresent()) {
             return RoomMapper.INSTANCE.roomToRoomDto(room.get());
         }
-        throw new RoomNotFoundException("There is no room with name = " + name);
+        throw new NotFoundException("There is no room with name = " + name);
     }
 
     @Transactional(readOnly = true)
-    public List<RoomDtoResponse> getRoomByOwner(String username) {
+    public List<RoomDtoResponse> getRoomByOwner(String username) throws NotFoundException {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
         return roomRepository.findRoomByOwner(user.get())
@@ -51,7 +50,7 @@ public class RoomService {
                 .map(RoomMapper.INSTANCE::roomToRoomDto)
                 .collect(Collectors.toList());
         }
-        throw new RoomNotFoundException("There is no user with name = " + username);
+        throw new NotFoundException("There is no owner with name = " + username);
     }
 
     @Transactional
@@ -61,7 +60,7 @@ public class RoomService {
     }
 
     @Transactional
-    public RoomDtoResponse updateRoom(Long id, RoomDtoRequest roomDtoRequest) {
+    public RoomDtoResponse updateRoom(Long id, RoomDtoRequest roomDtoRequest) throws NotFoundException {
         Optional<Room> roomOptional = roomRepository.findRoomById(id);
         if (roomOptional.isPresent()) {
             Room room = RoomMapper.INSTANCE.roomDtoToRoom(roomDtoRequest);
@@ -69,43 +68,43 @@ public class RoomService {
             roomRepository.save(room);
             return RoomMapper.INSTANCE.roomToRoomDto(room);
         }
-        throw new RoomNotFoundException("There is no room with id = " + id);
+        throw new NotFoundException("There is no room with id = " + id);
     }
     @Transactional
-    public void addUserToRoom(Long userId, Long roomId) {
+    public void addUserToRoom(Long userId, Long roomId) throws NotFoundException {
         Optional<User> user = userRepository.findUserById(userId);
         Optional<Room> room = roomRepository.findRoomById(roomId);
         if (user.isPresent() && room.isPresent()) {
             user.get().getRooms().add(room.get());
             userRepository.save(user.get());
         } else if(!user.isPresent()) {
-            throw new UserNotFoundException("There is no user in with id = " + userId);
+            throw new NotFoundException("There is no user in with id = " + userId);
         } else {
-            throw new RoomNotFoundException("There is no room with id = " + roomId);
+            throw new NotFoundException("There is no room with id = " + roomId);
         }
     }
 
     @Transactional
-    public void deleteUserFromRoom(Long userId, Long roomId) {
+    public void deleteUserFromRoom(Long userId, Long roomId) throws NotFoundException {
         Optional<User> user = userRepository.findUserById(userId);
         Optional<Room> room = roomRepository.findRoomById(roomId);
         if (user.isPresent() && room.isPresent()) {
             user.get().getRooms().remove(room.get());
             userRepository.save(user.get());
         } else if(!user.isPresent()) {
-            throw new UserNotFoundException("There is no user in with id = " + userId);
+            throw new NotFoundException("There is no user in with id = " + userId);
         } else {
-            throw new RoomNotFoundException("There is no room with id = " + roomId);
+            throw new NotFoundException("There is no room with id = " + roomId);
         }
     }
 
     @Transactional
-    public void deleteRoom(Long id) {
+    public void deleteRoom(Long id) throws NotFoundException {
         Optional<Room> roomOptional = roomRepository.findRoomById(id);
         if (roomOptional.isPresent()) {
             roomRepository.delete(roomOptional.get());
         } else {
-            throw new RoomNotFoundException("There is no room with id = " + id);
+            throw new NotFoundException("There is no room with id = " + id);
         }
     }
 }
