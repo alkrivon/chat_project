@@ -145,9 +145,9 @@ public class MessageController {
         if (userBanTime && messageDtoRequest.getRoom().equals(2L)) {
             String username = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf("l{")+2,
                                                                     messageDtoRequest.getContent().indexOf('}'));
-            String hours = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf("m{")+2,
+            String minutes = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf("m{")+2,
                                                                     messageDtoRequest.getContent().length()-1);
-            Long banTime = Long.parseLong(hours);
+            Long banTime = Long.parseLong(minutes);
             userService.setBanEnd(userService.getUserByUsername(username).getId(), banTime);
         }
         if (userModeratorOn && messageDtoRequest.getRoom().equals(2L)) {

@@ -91,7 +91,7 @@ public class UserService {
     @Transactional
     @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
     public void setBanEnd(Long id, Long banTime) {
-        LocalDateTime banEnd = LocalDateTime.now().plusHours(banTime);
+        LocalDateTime banEnd = LocalDateTime.now().plusMinutes(banTime);
         userRepository.setBanEnd(id, banEnd);
     }
 
