@@ -1,6 +1,7 @@
 package ru.simbirsoft.chat_project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
@@ -54,12 +55,16 @@ public class RoomService {
     }
 
     @Transactional
+    @PreAuthorize("principal.accountNonLocked")
     public RoomDtoResponse createRoom(RoomDtoRequest roomDtoRequest) {
-        Room message = roomRepository.save(RoomMapper.INSTANCE.roomDtoToRoom(roomDtoRequest));
-        return RoomMapper.INSTANCE.roomToRoomDto(message);
+        Room room = roomRepository.save(RoomMapper.INSTANCE.roomDtoToRoom(roomDtoRequest));
+        return RoomMapper.INSTANCE.roomToRoomDto(room);
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') OR principal.username == @roomRepository." +
+            "findRoomById(#roomId)" +
+            ".get().owner.login")
     public RoomDtoResponse updateRoom(Long id, RoomDtoRequest roomDtoRequest) throws NotFoundException {
         Optional<Room> roomOptional = roomRepository.findRoomById(id);
         if (roomOptional.isPresent()) {
@@ -70,7 +75,9 @@ public class RoomService {
         }
         throw new NotFoundException("There is no room with id = " + id);
     }
+
     @Transactional
+    @PreAuthorize("principal.accountNonLocked")
     public void addUserToRoom(Long userId, Long roomId) throws NotFoundException {
         Optional<User> user = userRepository.findUserById(userId);
         Optional<Room> room = roomRepository.findRoomById(roomId);
@@ -85,6 +92,9 @@ public class RoomService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN') OR principal.username == @roomRepository." +
+            "findRoomById(#roomId)" +
+            ".get().owner.login")
     public void deleteUserFromRoom(Long userId, Long roomId) throws NotFoundException {
         Optional<User> user = userRepository.findUserById(userId);
         Optional<Room> room = roomRepository.findRoomById(roomId);
@@ -106,5 +116,13 @@ public class RoomService {
         } else {
             throw new NotFoundException("There is no room with id = " + id);
         }
+    }
+
+    @Transactional
+    @PreAuthorize("principal.username == @roomRepository." +
+            "findRoomById(#id)" +
+            ".get().owner.login")
+    public void renameRoom(Long id, String name) {
+        roomRepository.setName(id, name);
     }
 }

@@ -1,6 +1,7 @@
 package ru.simbirsoft.chat_project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.simbirsoft.chat_project.dto.MessageDtoRequest;
@@ -60,12 +61,18 @@ public class MessageService {
     }
 
     @Transactional
+    @PreAuthorize("principal.accountNonLocked")
     public MessageDtoResponse createMessage(MessageDtoRequest messageDtoRequest) {
         Message message = messageRepository.save(MessageMapper.INSTANCE.messageDtoToMessage(messageDtoRequest));
         return MessageMapper.INSTANCE.messageToMessageDto(message);
     }
 
+//    public MessageDtoResponse botMessage(MessageDtoRequest messageDtoRequest) {
+//
+//    }
+
     @Transactional
+    @PreAuthorize("principal.accountNonLocked")
     public MessageDtoResponse updateMessage(Long id, MessageDtoRequest messageDtoRequest) throws NotFoundException {
         Optional<Message> messageOptional = messageRepository.findMessageById(id);
         if (messageOptional.isPresent()) {
@@ -78,6 +85,7 @@ public class MessageService {
     }
 
     @Transactional
+    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
     public void deleteMessage(Long id) throws NotFoundException {
         Optional<Message> messageOptional = messageRepository.findMessageById(id);
         if (messageOptional.isPresent()) {

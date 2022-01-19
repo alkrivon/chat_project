@@ -22,9 +22,9 @@ public class Room {
     private String name;
 
     @Column(name = "private_status")
-    private boolean private_status;
+    private Boolean private_status;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private User owner;
 
     @ManyToMany(mappedBy = "rooms", fetch = FetchType.LAZY)

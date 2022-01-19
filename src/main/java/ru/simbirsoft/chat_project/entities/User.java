@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 @Getter
@@ -36,13 +35,10 @@ public class User {
     @Column(name = "status")
     private Boolean status;
 
-    @Column(name = "ban_start")
-    private LocalDateTime ban_start;
+    @Column(name = "ban_end")
+    private LocalDateTime ban_end;
 
-    @Column(name = "ban_time")
-    private LocalTime ban_time;
-
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "owner")
     private List<Room> owner_rooms;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -53,6 +49,6 @@ public class User {
     )
     private List<Room> rooms;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author")
     private List<Message> messages;
 }

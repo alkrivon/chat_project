@@ -5,6 +5,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.simbirsoft.chat_project.entities.User;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -13,6 +14,8 @@ public class CustomUserDetails implements UserDetails {
     private String login;
     private String password;
     private Boolean status;
+    private Long id;
+    private LocalDateTime ban_end;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
 
     public static CustomUserDetails fromUserEntityToCustomUserDetails(User user) {
@@ -20,6 +23,8 @@ public class CustomUserDetails implements UserDetails {
         c.login = user.getLogin();
         c.password = user.getPassword();
         c.status = user.getStatus();
+        c.ban_end = user.getBan_end();
+        c.id = user.getId();
         c.grantedAuthorities = Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getName()));
         return c;
     }
@@ -46,9 +51,11 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return status.equals(true);
+        if (status && (ban_end == null || ban_end.isBefore(LocalDateTime.now()))) {
+            return true;
+        } else
+            return false;
     }
-
 
     @Override
     public boolean isCredentialsNonExpired() {
@@ -58,5 +65,9 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

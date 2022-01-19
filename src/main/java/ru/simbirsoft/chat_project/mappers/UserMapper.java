@@ -20,8 +20,7 @@ public interface UserMapper {
             @Mapping(source = "login", target = "login"),
             @Mapping(source = "role.id", target = "role"),
             @Mapping(source = "status", target = "status"),
-            @Mapping(source = "ban_start", target = "ban_start"),
-            @Mapping(source = "ban_time", target = "ban_time"),
+            @Mapping(source = "ban_end", target = "ban_end")
     })
     UserDtoResponse userToUserDto(User entity);
 
@@ -30,8 +29,7 @@ public interface UserMapper {
             @Mapping(source = "login", target = "login"),
             @Mapping(source = "role", target = "role.id"),
             @Mapping(source = "status", target = "status"),
-            @Mapping(source = "ban_start", target = "ban_start"),
-            @Mapping(source = "ban_time", target = "ban_time"),
+            @Mapping(source = "ban_end", target = "ban_end")
     })
     User userDtoToUser(UserDtoRequest dto);
 

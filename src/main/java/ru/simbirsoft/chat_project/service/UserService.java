@@ -1,6 +1,7 @@
 package ru.simbirsoft.chat_project.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import ru.simbirsoft.chat_project.mappers.UserMapper;
 import ru.simbirsoft.chat_project.repository.RoleRepository;
 import ru.simbirsoft.chat_project.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -59,6 +61,7 @@ public class UserService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDtoResponse updateUser(Long id, UserDtoRequest userDtoRequest) throws NotFoundException {
         Optional<User> userOptional = userRepository.findUserById(id);
         if (userOptional.isPresent()) {
@@ -80,9 +83,31 @@ public class UserService {
     }
 
     @Transactional
+    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
     public void setStatus(Long id, Boolean status) {
         userRepository.setStatus(id, status);
     }
+
+    @Transactional
+    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
+    public void setBanEnd(Long id, Long banTime) {
+        LocalDateTime banEnd = LocalDateTime.now().plusHours(banTime);
+        userRepository.setBanEnd(id, banEnd);
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void setRole (Long id, Role role) {
+        userRepository.setRole(id, role);
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void setUsername(Long id, String username) {
+        userRepository.setUsername(id, username);
+    }
+
+
 
     public User saveUser(User user) {
         Role role = roleRepository.findByName("ROLE_USER");

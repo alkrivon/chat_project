@@ -19,7 +19,7 @@ public class Message {
     @Column(name = "content")
     private String content;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "author")
     private User author;
 
