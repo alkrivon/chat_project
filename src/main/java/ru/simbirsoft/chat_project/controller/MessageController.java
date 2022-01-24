@@ -16,7 +16,9 @@ import ru.simbirsoft.chat_project.security.CustomUserDetails;
 import ru.simbirsoft.chat_project.service.MessageService;
 import ru.simbirsoft.chat_project.service.RoomService;
 import ru.simbirsoft.chat_project.service.UserService;
+import ru.simbirsoft.chat_project.utill.SearchVideoYoutube;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -51,6 +53,19 @@ public class MessageController {
     private String regexUserModeratorOn;
     @Value("${regexUserModeratorOff}")
     private String regexUserModeratorOff;
+    @Value("${youtube.apikey}")
+    private String apikey;
+    @Value("${regexYoutubeBotViews}")
+    private String regexYoutubeBotViews;
+    @Value("${regexYoutubeBotLikes}")
+    private String regexYoutubeBotLikes;
+    @Value("${regexYoutubeBotViewsAndLikes}")
+    private String regexYoutubeBotViewsAndLikes;
+    @Value("${regexYoutubeBotChannelNameAndVideos}")
+    private String regexYoutubeBotChannelNameAndVideos;
+    @Value("${regexRandomComment}")
+    private String regexRandomComment;
+
 
 
     @GetMapping("/get/{messageId}")
@@ -69,9 +84,9 @@ public class MessageController {
     }
 
     @PostMapping("/create")
-    public MessageDtoResponse createMessage(@RequestBody MessageDtoRequest messageDtoRequest,
+    public ResponseEntity<String> createMessage(@RequestBody MessageDtoRequest messageDtoRequest,
                                             @AuthenticationPrincipal CustomUserDetails customUserDetails)
-                                            throws NotFoundException {
+            throws NotFoundException, IOException {
 
         boolean createRoom = Pattern.matches(regexCreateRoom, messageDtoRequest.getContent());
         boolean createRoomWithStatus = Pattern.matches(regexCreateRoomWithStatus, messageDtoRequest.getContent());
@@ -84,6 +99,13 @@ public class MessageController {
         boolean userBanTime = Pattern.matches(regexUserBanTime, messageDtoRequest.getContent());
         boolean userModeratorOn = Pattern.matches(regexUserModeratorOn, messageDtoRequest.getContent());
         boolean userModeratorOff = Pattern.matches(regexUserModeratorOff, messageDtoRequest.getContent());
+        boolean youtubeBotViews = Pattern.matches(regexYoutubeBotViews, messageDtoRequest.getContent());
+        boolean youtubeBotLikes = Pattern.matches(regexYoutubeBotLikes, messageDtoRequest.getContent());
+        boolean youtubeBotViewsAndLikes = Pattern.matches(regexYoutubeBotViewsAndLikes, messageDtoRequest.getContent());
+        boolean youtubeBotChannelNameAndVideos = Pattern.matches(regexYoutubeBotChannelNameAndVideos, messageDtoRequest.getContent());
+        boolean youtubeBotRandomComment = Pattern.matches(regexRandomComment, messageDtoRequest.getContent());
+
+        SearchVideoYoutube youtubeInfo = new SearchVideoYoutube(apikey);
 
         if (createRoom && messageDtoRequest.getRoom().equals(2L)) {
             String roomName = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
@@ -128,7 +150,7 @@ public class MessageController {
             String username = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf("l{")+2,
                                                                     messageDtoRequest.getContent().length()-1);
             roomService.deleteUserFromRoom(roomService.getRoomByName(roomName).getId(),
-                    userService.getUserByUsername(username).getId());
+                                        userService.getUserByUsername(username).getId());
         }
         if (userRename && messageDtoRequest.getRoom().equals(2L)) {
             String oldUsername = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
@@ -152,7 +174,7 @@ public class MessageController {
         }
         if (userModeratorOn && messageDtoRequest.getRoom().equals(2L)) {
             String username = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
-                    messageDtoRequest.getContent().indexOf('}'));
+                                                                    messageDtoRequest.getContent().indexOf('}'));
             Role role = roleRepository.findById(2L).get();
             userService.setRole(userService.getUserByUsername(username).getId(), role);
         }
@@ -162,7 +184,40 @@ public class MessageController {
             Role role = roleRepository.findById(1L).get();
             userService.setRole(userService.getUserByUsername(username).getId(), role);
         }
-        return messageService.createMessage(messageDtoRequest);
+        if (youtubeBotViews && messageDtoRequest.getRoom().equals(2L)) {
+            String videoID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
+                                                                    messageDtoRequest.getContent().indexOf('}'));;
+            messageService.createMessage(messageDtoRequest);
+            return new ResponseEntity<>("Views: " + youtubeInfo.getViewCount(videoID), HttpStatus.OK);
+        }
+        if (youtubeBotLikes && messageDtoRequest.getRoom().equals(2L)) {
+            String videoID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
+                                                                messageDtoRequest.getContent().indexOf('}'));
+            messageService.createMessage(messageDtoRequest);
+            return new ResponseEntity<>("Likes: " + youtubeInfo.getLikeCount(videoID), HttpStatus.OK);
+        }
+        if (youtubeBotViewsAndLikes && messageDtoRequest.getRoom().equals(2L)) {
+            String videoID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
+                                                                messageDtoRequest.getContent().indexOf('}'));
+            messageService.createMessage(messageDtoRequest);
+            return new ResponseEntity<>("Views: " + youtubeInfo.getViewCount(videoID) + "\n" +
+                                              "Likes: " + youtubeInfo.getLikeCount(videoID), HttpStatus.OK);
+        }
+        if (youtubeBotChannelNameAndVideos && messageDtoRequest.getRoom().equals(2L)) {
+            String channelID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
+                                                                messageDtoRequest.getContent().indexOf('}'));
+            messageService.createMessage(messageDtoRequest);
+            return new ResponseEntity<>("Channel's name: : " + youtubeInfo.getChannelName(channelID)  + "\n" +
+                                              "URL: " + youtubeInfo.getChannelVideos(channelID), HttpStatus.OK);
+        }
+        if (youtubeBotRandomComment && messageDtoRequest.getRoom().equals(2L)) {
+            String videoID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
+                                                                messageDtoRequest.getContent().indexOf('}'));
+            messageService.createMessage(messageDtoRequest);
+            return new ResponseEntity<>(youtubeInfo.getComments(videoID), HttpStatus.OK);
+        }
+        messageService.createMessage(messageDtoRequest);
+        return new ResponseEntity<>("Message has been sent!", HttpStatus.OK);
     }
 
     @PutMapping("/update/{messageId}")

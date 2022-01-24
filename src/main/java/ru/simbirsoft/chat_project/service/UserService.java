@@ -97,17 +97,15 @@ public class UserService {
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public void setRole (Long id, Role role) {
-        userRepository.setRole(id, role);
+    public void setRole (Long userId, Role role) {
+        userRepository.setRole(userId, role);
     }
 
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public void setUsername(Long id, String username) {
-        userRepository.setUsername(id, username);
+    public void setUsername(Long userId, String username) {
+        userRepository.setUsername(userId, username);
     }
-
-
 
     public User saveUser(User user) {
         Role role = roleRepository.findByName("ROLE_USER");
