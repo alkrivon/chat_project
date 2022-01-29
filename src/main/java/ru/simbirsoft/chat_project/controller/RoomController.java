@@ -3,10 +3,12 @@ package ru.simbirsoft.chat_project.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.simbirsoft.chat_project.dto.RoomDtoRequest;
 import ru.simbirsoft.chat_project.dto.RoomDtoResponse;
 import ru.simbirsoft.chat_project.exception.NotFoundException;
+import ru.simbirsoft.chat_project.security.CustomUserDetails;
 import ru.simbirsoft.chat_project.service.RoomService;
 
 import java.util.List;
@@ -48,7 +50,9 @@ public class RoomController {
     }
 
     @PostMapping("/create")
-    public RoomDtoResponse createRoom(@RequestBody RoomDtoRequest roomDtoRequest) {
+    public RoomDtoResponse createRoom(@RequestBody RoomDtoRequest roomDtoRequest,
+                                      @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        roomDtoRequest.setOwner(customUserDetails.getId());
         return roomService.createRoom(roomDtoRequest);
     }
 

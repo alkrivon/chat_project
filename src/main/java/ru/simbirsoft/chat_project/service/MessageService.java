@@ -27,6 +27,7 @@ public class MessageService {
     private final UserRepository userRepository;
     private final RoomRepository roomRepository;
 
+    @PreAuthorize("principal.username == @messageRepository.findMessageById(#id).get().author.login")
     @Transactional(readOnly = true)
     public MessageDtoResponse getMessageById(Long id) throws NotFoundException {
         Optional<Message> message = messageRepository.findMessageById(id);
@@ -36,6 +37,7 @@ public class MessageService {
         throw new NotFoundException("There is no message with id = " + id);
     }
 
+    @PreAuthorize("principal.username == @userRepository.findByUsername(#username).get().login")
     @Transactional(readOnly = true)
     public List<MessageDtoResponse> getMessageByAuthor(String username) throws NotFoundException {
         Optional<User> user = userRepository.findByUsername(username);

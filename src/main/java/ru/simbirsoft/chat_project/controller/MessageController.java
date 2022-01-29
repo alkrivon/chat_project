@@ -186,19 +186,22 @@ public class MessageController {
         }
         if (youtubeBotViews && messageDtoRequest.getRoom().equals(2L)) {
             String videoID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
-                                                                    messageDtoRequest.getContent().indexOf('}'));;
+                                                                    messageDtoRequest.getContent().indexOf('}'));
+            messageDtoRequest.setAuthor(customUserDetails.getId());
             messageService.createMessage(messageDtoRequest);
             return new ResponseEntity<>("Views: " + youtubeInfo.getViewCount(videoID), HttpStatus.OK);
         }
         if (youtubeBotLikes && messageDtoRequest.getRoom().equals(2L)) {
             String videoID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
                                                                 messageDtoRequest.getContent().indexOf('}'));
+            messageDtoRequest.setAuthor(customUserDetails.getId());
             messageService.createMessage(messageDtoRequest);
             return new ResponseEntity<>("Likes: " + youtubeInfo.getLikeCount(videoID), HttpStatus.OK);
         }
         if (youtubeBotViewsAndLikes && messageDtoRequest.getRoom().equals(2L)) {
             String videoID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
                                                                 messageDtoRequest.getContent().indexOf('}'));
+            messageDtoRequest.setAuthor(customUserDetails.getId());
             messageService.createMessage(messageDtoRequest);
             return new ResponseEntity<>("Views: " + youtubeInfo.getViewCount(videoID) + "\n" +
                                               "Likes: " + youtubeInfo.getLikeCount(videoID), HttpStatus.OK);
@@ -206,6 +209,7 @@ public class MessageController {
         if (youtubeBotChannelNameAndVideos && messageDtoRequest.getRoom().equals(2L)) {
             String channelID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
                                                                 messageDtoRequest.getContent().indexOf('}'));
+            messageDtoRequest.setAuthor(customUserDetails.getId());
             messageService.createMessage(messageDtoRequest);
             return new ResponseEntity<>("Channel's name: : " + youtubeInfo.getChannelName(channelID)  + "\n" +
                                               "URL: " + youtubeInfo.getChannelVideos(channelID), HttpStatus.OK);
@@ -213,9 +217,11 @@ public class MessageController {
         if (youtubeBotRandomComment && messageDtoRequest.getRoom().equals(2L)) {
             String videoID = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf('{')+1,
                                                                 messageDtoRequest.getContent().indexOf('}'));
+            messageDtoRequest.setAuthor(customUserDetails.getId());
             messageService.createMessage(messageDtoRequest);
             return new ResponseEntity<>(youtubeInfo.getComments(videoID), HttpStatus.OK);
         }
+        messageDtoRequest.setAuthor(customUserDetails.getId());
         messageService.createMessage(messageDtoRequest);
         return new ResponseEntity<>("Message has been sent!", HttpStatus.OK);
     }

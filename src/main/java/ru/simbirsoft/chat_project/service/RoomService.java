@@ -82,6 +82,9 @@ public class RoomService {
         Optional<User> user = userRepository.findUserById(userId);
         Optional<Room> room = roomRepository.findRoomById(roomId);
         if (user.isPresent() && room.isPresent()) {
+            if (room.get().getPrivate_status() && room.get().getUsers().size() == 1) {
+                throw new NotFoundException("Room is private!");
+            }
             user.get().getRooms().add(room.get());
             userRepository.save(user.get());
         } else if(!user.isPresent()) {
