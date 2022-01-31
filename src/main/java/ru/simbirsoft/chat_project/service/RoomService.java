@@ -95,9 +95,9 @@ public class RoomService {
     }
 
     @Transactional
-    @PreAuthorize("hasRole('ADMIN') OR principal.username == @roomRepository." +
+    @PreAuthorize("(hasRole('ADMIN') OR principal.username == @roomRepository." +
             "findRoomById(#roomId)" +
-            ".get().owner.login")
+            ".get().owner.login) AND principal.accountNonLocked")
     public void deleteUserFromRoom(Long userId, Long roomId) throws NotFoundException {
         Optional<User> user = userRepository.findUserById(userId);
         Optional<Room> room = roomRepository.findRoomById(roomId);
@@ -122,10 +122,10 @@ public class RoomService {
     }
 
     @Transactional
-    @PreAuthorize("principal.username == @roomRepository." +
-            "findRoomById(#id)" +
-            ".get().owner.login")
-    public void renameRoom(Long id, String name) {
-        roomRepository.setName(id, name);
+    @PreAuthorize("(hasRole('ADMIN') OR principal.username == @roomRepository." +
+            "findRoomById(#roomId)" +
+            ".get().owner.login) AND principal.accountNonLocked")
+    public void renameRoom(Long roomId, String name) {
+        roomRepository.setName(roomId, name);
     }
 }

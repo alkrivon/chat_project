@@ -69,10 +69,6 @@ public class MessageService {
         return MessageMapper.INSTANCE.messageToMessageDto(message);
     }
 
-//    public MessageDtoResponse botMessage(MessageDtoRequest messageDtoRequest) {
-//
-//    }
-
     @Transactional
     @PreAuthorize("principal.accountNonLocked")
     public MessageDtoResponse updateMessage(Long id, MessageDtoRequest messageDtoRequest) throws NotFoundException {
@@ -87,7 +83,7 @@ public class MessageService {
     }
 
     @Transactional
-    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR')")
+    @PreAuthorize("hasAnyRole('ADMIN','MODERATOR') AND principal.accountNonLocked")
     public void deleteMessage(Long id) throws NotFoundException {
         Optional<Message> messageOptional = messageRepository.findMessageById(id);
         if (messageOptional.isPresent()) {

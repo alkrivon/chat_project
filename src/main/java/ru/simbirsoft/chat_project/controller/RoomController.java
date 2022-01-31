@@ -67,5 +67,12 @@ public class RoomController {
         roomService.deleteRoom(roomId);
         return new ResponseEntity<>("Room has been deleted", HttpStatus.OK);
     }
+
+    @PatchMapping("/rename/{roomId}")
+    public ResponseEntity<String> renameRoom(@PathVariable Long roomId,
+                                             @RequestParam String roomName) {
+        roomService.renameRoom(roomId, roomName);
+        return new ResponseEntity<>("Room has been renamed", HttpStatus.OK);
+    }
 }
 
