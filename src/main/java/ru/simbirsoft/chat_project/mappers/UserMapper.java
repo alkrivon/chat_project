@@ -32,5 +32,4 @@ public interface UserMapper {
             @Mapping(source = "ban_end", target = "ban_end")
     })
     User userDtoToUser(UserDtoRequest dto);
-
 }
