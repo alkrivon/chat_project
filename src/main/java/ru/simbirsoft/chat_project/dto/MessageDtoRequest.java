@@ -8,5 +8,4 @@ public class MessageDtoRequest {
     private String content;
     private Long author;
     private Long room;
-
 }

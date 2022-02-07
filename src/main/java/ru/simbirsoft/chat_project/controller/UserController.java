@@ -69,5 +69,4 @@ public class UserController {
         userService.setStatus(userId, status);
         return new ResponseEntity<>("Status has been updated", HttpStatus.OK);
     }
-
 }
