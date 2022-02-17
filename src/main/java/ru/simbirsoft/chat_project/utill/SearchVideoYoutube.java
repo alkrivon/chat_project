@@ -15,18 +15,17 @@ import java.util.Random;
 
 public class SearchVideoYoutube {
 
-    private String apikey;
-    private YouTube youTube;
+    private final String apikey;
+    private final YouTube youTube;
 
     public SearchVideoYoutube(String apikey) {
-        if (youTube == null) {
-            youTube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(), new HttpRequestInitializer() {
-                @Override
-                public void initialize(HttpRequest httpRequest) throws IOException {
-                }
-            }).setApplicationName("chat-bot-youtube").build();
-            this.apikey = apikey;
-        }
+        youTube = new YouTube.Builder(new NetHttpTransport(), new JacksonFactory(),
+                                      new HttpRequestInitializer() {
+            @Override
+            public void initialize(HttpRequest httpRequest) throws IOException {
+            }
+        }).setApplicationName("chat-bot-youtube").build();
+        this.apikey = apikey;
     }
 
     public BigInteger getViewCount(String videoID) throws IOException{
