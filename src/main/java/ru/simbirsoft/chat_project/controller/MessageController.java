@@ -87,33 +87,33 @@ public class MessageController {
                                                                                 messageDtoRequest.getContent().indexOf('}'));
         SearchVideoYoutube youtubeInfo = new SearchVideoYoutube(apikey);
 
-        if (isActiveCreateRoom && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveCreateRoom && messageDtoRequest.getRoom().equals(1L)) {
             RoomDtoRequest roomDtoRequest = new RoomDtoRequest();
             roomDtoRequest.setOwner(customUserDetails.getId());
             roomDtoRequest.setName(substringOfCommandParameter);
             roomService.createRoom(roomDtoRequest);
         }
-        if (isActiveRemoveRoom && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveRemoveRoom && messageDtoRequest.getRoom().equals(1L)) {
             roomService.deleteRoom(roomService.getRoomByName(substringOfCommandParameter).getId());
         }
-        if (isActiveRenameRoom && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveRenameRoom && messageDtoRequest.getRoom().equals(1L)) {
             String newName = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf("}{")+2,
                                                                     messageDtoRequest.getContent().length()-1);
             roomService.renameRoom(roomService.getRoomByName(substringOfCommandParameter).getId(), newName);
         }
-        if (isActiveAddUser && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveAddUser && messageDtoRequest.getRoom().equals(1L)) {
             String username = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf("l{")+2,
                                                                     messageDtoRequest.getContent().length()-1);
             roomService.addUserToRoom(roomService.getRoomByName(substringOfCommandParameter).getId(),
                                     userService.getUserByUsername(username).getId());
         }
-        if (isActiveDeleteUser && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveDeleteUser && messageDtoRequest.getRoom().equals(1L)) {
             String username = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf("l{")+2,
                                                                     messageDtoRequest.getContent().length()-1);
             roomService.deleteUserFromRoom(roomService.getRoomByName(substringOfCommandParameter).getId(),
                                         userService.getUserByUsername(username).getId());
         }
-        if (isActiveUserBanTime && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveUserBanTime && messageDtoRequest.getRoom().equals(1L)) {
             String username = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf("l{")+2,
                                                                     messageDtoRequest.getContent().indexOf('}'));
             String minutes = messageDtoRequest.getContent().substring(messageDtoRequest.getContent().indexOf("m{")+2,
@@ -121,25 +121,25 @@ public class MessageController {
             Long banTime = Long.parseLong(minutes);
             userService.setBanEnd(userService.getUserByUsername(username).getId(), banTime);
         }
-        if (isActiveYoutubeBotViews && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveYoutubeBotViews && messageDtoRequest.getRoom().equals(1L)) {
             messageDtoRequest.setAuthor(customUserDetails.getId());
             messageService.createMessage(messageDtoRequest);
             return new ResponseEntity<>("Views: " + youtubeInfo.getViewCount(substringOfCommandParameter),
                                                                                 HttpStatus.OK);
         }
-        if (isActiveYoutubeBotLikes && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveYoutubeBotLikes && messageDtoRequest.getRoom().equals(1L)) {
             messageDtoRequest.setAuthor(customUserDetails.getId());
             messageService.createMessage(messageDtoRequest);
             return new ResponseEntity<>("Likes: " + youtubeInfo.getLikeCount(substringOfCommandParameter),
                                                                                 HttpStatus.OK);
         }
-        if (isActiveYoutubeBotViewsAndLikes && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveYoutubeBotViewsAndLikes && messageDtoRequest.getRoom().equals(1L)) {
             messageDtoRequest.setAuthor(customUserDetails.getId());
             messageService.createMessage(messageDtoRequest);
             return new ResponseEntity<>("Views: " + youtubeInfo.getViewCount(substringOfCommandParameter) + "\n" +
                                               "Likes: " + youtubeInfo.getLikeCount(substringOfCommandParameter), HttpStatus.OK);
         }
-        if (isActiveYoutubeBotChannelNameAndVideos && messageDtoRequest.getRoom().equals(2L)) {
+        if (isActiveYoutubeBotChannelNameAndVideos && messageDtoRequest.getRoom().equals(1L)) {
             messageDtoRequest.setAuthor(customUserDetails.getId());
             messageService.createMessage(messageDtoRequest);
             return new ResponseEntity<>("Channel's name: : " + youtubeInfo.getChannelName(substringOfCommandParameter)  + "\n" +
